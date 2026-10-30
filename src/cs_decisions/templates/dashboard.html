@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-0: #f4f3f0;
+    --surface-1: #fcfcfb;
+    --surface-2: #f0efec;
+    --border: #e4e2dc;
+    --grid: #ebe9e4;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #7a7974;
+    --matched: #2a78d6;
+    --unmatched: #eb6834;
+    --seq-0: #f0efec;
+    --seq-1: #cde2fb; --seq-2: #9ec5f4; --seq-3: #6da7ec; --seq-4: #3987e5;
+    --seq-5: #256abf; --seq-6: #184f95; --seq-7: #0d366b;
+    --seq-ink-light: #0b0b0b; --seq-ink-dark: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface-0: #111110;
+      --surface-1: #1a1a19;
+      --surface-2: #262624;
+      --border: #33332f;
+      --grid: #2a2a27;
+      --text-primary: #f0efec;
+      --text-secondary: #c3c2b7;
+      --text-muted: #8f8e86;
+      --matched: #3987e5;
+      --unmatched: #d95926;
+      --seq-0: #262624;
+      --seq-1: #0d366b; --seq-2: #104281; --seq-3: #184f95; --seq-4: #256abf;
+      --seq-5: #3987e5; --seq-6: #6da7ec; --seq-7: #9ec5f4;
+      --seq-ink-light: #ffffff; --seq-ink-dark: #0b0b0b;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-0: #111110;
+    --surface-1: #1a1a19;
+    --surface-2: #262624;
+    --border: #33332f;
+    --grid: #2a2a27;
+    --text-primary: #f0efec;
+    --text-secondary: #c3c2b7;
+    --text-muted: #8f8e86;
+    --matched: #3987e5;
+    --unmatched: #d95926;
+    --seq-0: #262624;
+    --seq-1: #0d366b; --seq-2: #104281; --seq-3: #184f95; --seq-4: #256abf;
+    --seq-5: #3987e5; --seq-6: #6da7ec; --seq-7: #9ec5f4;
+    --seq-ink-light: #ffffff; --seq-ink-dark: #0b0b0b;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface-0);
+    color: var(--text-primary);
+    font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 1320px; margin: 0 auto; padding: 28px 16px 64px; }
+  header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 20px; }
+  h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; letter-spacing: -0.01em; }
+  h2 { font-size: 14px; margin: 0; font-weight: 600; }
+  .sub, .note { color: var(--text-secondary); }
+  .note { font-size: 12px; margin-top: 2px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; font-size: 12px; color: var(--text-secondary); }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; min-width: 0; }
+  .span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .span-4 { grid-column: span 4; }
+  @media (max-width: 960px) { .span-8, .span-6, .span-4 { grid-column: span 12; } }
+  .card-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+
+  .kpis { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin-bottom: 16px; }
+  .kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .kpi .label { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .kpi .value { font-size: 26px; font-weight: 650; letter-spacing: -0.02em; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .kpi .detail { font-size: 12px; color: var(--text-muted); }
+  .swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; flex: none; }
+
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--text-secondary); align-items: center; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .chart-box { position: relative; height: 300px; }
+  .chart-box.tall { height: 360px; }
+
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .seg button { background: none; border: 0; padding: 4px 10px; font: inherit; font-size: 12px; color: var(--text-secondary); cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text-primary); font-weight: 600; }
+
+  .heat-wrap { overflow-x: auto; }
+  .heat { display: grid; gap: 2px; align-items: center; width: 100%; min-width: 560px; }
+  .heat .name { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; max-width: 240px; }
+  .heat .cell { height: 22px; min-width: 14px; border-radius: 3px; background: var(--seq-0); }
+  .heat .axis { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .heat .axis:last-child { direction: rtl; }
+  .scale { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+  .scale i { width: 16px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  th { font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; user-select: none; position: sticky; top: 0; background: var(--surface-1); }
+  th.num, td.num { text-align: right; }
+  th[aria-sort="descending"]::after { content: " ↓"; } th[aria-sort="ascending"]::after { content: " ↑"; }
+  td.name { max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+  td.wide { max-width: 520px; }
+  .table-wrap { overflow: auto; max-height: 520px; }
+  .rate { display: inline-flex; align-items: center; gap: 8px; }
+  .rate .track { width: 64px; height: 6px; border-radius: 3px; background: var(--unmatched); overflow: hidden; display: inline-block; }
+  .rate .fill { height: 100%; background: var(--matched); display: block; border-right: 2px solid var(--surface-1); }
+  .tag { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-secondary); margin-left: 6px; }
+  svg.spark { display: block; }
+
+  #tip { position: fixed; pointer-events: none; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
+         border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 20px rgba(0,0,0,.15); display: none; z-index: 10; }
+  #tip b { font-weight: 600; }
+  .empty { padding: 48px; text-align: center; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1 id="title">Policy decision logs</h1>
+      <div class="sub" id="subtitle"></div>
+    </div>
+    <div class="chips" id="chips"></div>
+  </header>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="grid">
+    <div class="card span-8">
+      <div class="card-head">
+        <div><h2>Decision logs per day</h2><div class="note">Every policy evaluated against every package, split by outcome</div></div>
+        <div class="legend"><span><i class="swatch" style="background:var(--matched)"></i>Matched</span><span><i class="swatch" style="background:var(--unmatched)"></i>Unmatched</span></div>
+      </div>
+      <div class="chart-box"><canvas id="daily"></canvas></div>
+    </div>
+    <div class="card span-4">
+      <div class="card-head"><div><h2>Daily match rate</h2><div class="note">Share of evaluations that matched a policy</div></div></div>
+      <div class="chart-box"><canvas id="rate"></canvas></div>
+    </div>
+
+    <div class="card span-6">
+      <div class="card-head">
+        <div><h2>Most active policies</h2><div class="note">Ranked by matches</div></div>
+        <div class="legend"><span><i class="swatch" style="background:var(--matched)"></i>Matched</span><span><i class="swatch" style="background:var(--unmatched)"></i>Unmatched</span></div>
+      </div>
+      <div class="chart-box tall"><canvas id="active"></canvas></div>
+    </div>
+    <div class="card span-6">
+      <div class="card-head">
+        <div><h2>Noisiest policies</h2><div class="note">Ranked by unmatched evaluations: work done with no outcome</div></div>
+        <div class="legend"><span><i class="swatch" style="background:var(--matched)"></i>Matched</span><span><i class="swatch" style="background:var(--unmatched)"></i>Unmatched</span></div>
+      </div>
+      <div class="chart-box tall"><canvas id="noisy"></canvas></div>
+    </div>
+
+    <div class="card span-12">
+      <div class="card-head">
+        <div><h2>Policy activity by day</h2><div class="note" id="heat-note"></div></div>
+        <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap">
+          <div class="scale" id="heat-scale"></div>
+          <div class="seg" role="group" aria-label="Heatmap measure">
+            <button data-m="matched" aria-pressed="true">Matched</button>
+            <button data-m="unmatched" aria-pressed="false">Unmatched</button>
+            <button data-m="total" aria-pressed="false">All</button>
+          </div>
+        </div>
+      </div>
+      <div class="heat-wrap"><div class="heat" id="heat"></div></div>
+    </div>
+
+    <div class="card span-6">
+      <div class="card-head"><div><h2>Repositories</h2><div class="note">Decision logs by repository</div></div></div>
+      <div class="chart-box"><canvas id="repos"></canvas></div>
+    </div>
+    <div class="card span-6">
+      <div class="card-head"><div><h2>Package formats</h2><div class="note">Decision logs by format</div></div></div>
+      <div class="chart-box"><canvas id="formats"></canvas></div>
+    </div>
+
+    <div class="card span-12">
+      <div class="card-head"><div><h2>All policies</h2><div class="note">Click a column to sort. The trend column shows matches per day.</div></div></div>
+      <div class="table-wrap"><table id="policy-table"></table></div>
+    </div>
+
+    <div class="card span-12">
+      <div class="card-head"><div><h2>Most-matched packages</h2><div class="note">Packages that triggered the most policy matches</div></div></div>
+      <div class="table-wrap"><table id="package-table"></table></div>
+    </div>
+  </section>
+</main>
+<div id="tip" role="tooltip"></div>
+
+<script type="application/json" id="payload">__PAYLOAD__</script>
+<script>
+(() => {
+  const D = JSON.parse(document.getElementById("payload").textContent);
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const fmt = (n) => Number(n).toLocaleString();
+  const pct = (x) => (x * 100).toFixed(1) + "%";
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const byKey = Object.fromEntries(D.policies.map((p) => [p.key, p]));
+  const tip = document.getElementById("tip");
+  const showTip = (e, html) => { tip.innerHTML = html; tip.style.display = "block"; moveTip(e); };
+  const moveTip = (e) => {
+    const r = tip.getBoundingClientRect();
+    tip.style.left = Math.min(e.clientX + 14, innerWidth - r.width - 8) + "px";
+    tip.style.top = Math.min(e.clientY + 14, innerHeight - r.height - 8) + "px";
+  };
+  const hideTip = () => (tip.style.display = "none");
+
+  // Header
+  const m = D.meta, k = D.kpis;
+  document.getElementById("title").textContent = `Policy decision logs · ${m.workspace}`;
+  document.getElementById("subtitle").textContent = `${m.start} → ${m.end} · ${D.days.length} days · generated ${m.generated}`;
+  document.getElementById("chips").innerHTML = Object.entries(m.filters)
+    .map(([key, v]) => `<span class="chip">${esc(key)}: ${esc(Array.isArray(v) ? v.join(", ") : v)}</span>`).join("");
+
+  if (!k.total) {
+    document.querySelector(".grid").innerHTML = '<div class="card span-12 empty">No decision logs in this window.</div>';
+    return;
+  }
+
+  // KPIs
+  const trend = k.trend_pct == null ? "n/a" : `${k.trend_pct >= 0 ? "▲" : "▼"} ${Math.abs(k.trend_pct).toFixed(0)}%`;
+  const kpis = [
+    ["Decision logs", fmt(k.total), `${k.avg_per_day.toFixed(1)} per day on average`],
+    ["Matched", fmt(k.matched), `${pct(k.match_rate)} match rate`, "--matched"],
+    ["Unmatched", fmt(k.unmatched), `${pct(1 - k.match_rate)} of all logs`, "--unmatched"],
+    ["Evaluations", fmt(k.evaluations), `${fmt(k.packages)} distinct packages`],
+    ["Policies", fmt(k.policies), `${k.silent_policies} never matched`],
+    ["Volume trend", trend, "vs first half of window"],
+    ["Busiest day", fmt(k.busiest_total), k.busiest_day || ""],
+  ];
+  document.getElementById("kpis").innerHTML = kpis.map(([label, value, detail, color]) => `
+    <div class="kpi"><div class="label">${color ? `<i class="swatch" style="background:var(${color})"></i>` : ""}${label}</div>
+    <div class="value">${value}</div><div class="detail">${esc(detail)}</div></div>`).join("");
+
+  // Chart.js defaults
+  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = css("--text-secondary");
+  Chart.defaults.borderColor = css("--grid");
+  Chart.defaults.plugins.legend.display = false;
+  Object.assign(Chart.defaults.plugins.tooltip, {
+    backgroundColor: css("--surface-1"), titleColor: css("--text-primary"), bodyColor: css("--text-primary"),
+    borderColor: css("--border"), borderWidth: 1, padding: 10, boxPadding: 4, usePointStyle: true,
+  });
+  const surface = css("--surface-1");
+  const MATCHED = css("--matched"), UNMATCHED = css("--unmatched");
+  const bar = (label, data, color, extra = {}) => ({
+    label, data, backgroundColor: color, borderColor: surface, borderWidth: { top: 2, right: 0, bottom: 0, left: 0 },
+    borderRadius: 3, borderSkipped: false, ...extra,
+  });
+  const shortDate = (d) => new Date(d + "T00:00:00Z").toLocaleDateString(undefined, { month: "short", day: "numeric", timeZone: "UTC" });
+
+  // Daily stacked bars
+  new Chart(document.getElementById("daily"), {
+    type: "bar",
+    data: {
+      labels: D.days.map(shortDate),
+      datasets: [
+        bar("Matched", D.daily.map((d) => d.matched), MATCHED, { borderWidth: 0 }),
+        bar("Unmatched", D.daily.map((d) => d.unmatched), UNMATCHED),
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { maxRotation: 0, autoSkipPadding: 16 } },
+        y: { stacked: true, beginAtZero: true, border: { display: false }, ticks: { precision: 0 } },
+      },
+      datasets: { bar: { categoryPercentage: 0.85, barPercentage: 0.9 } },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: (items) => D.days[items[0].dataIndex],
+            footer: (items) => {
+              const d = D.daily[items[0].dataIndex];
+              return `Total ${fmt(d.total)} · match rate ${pct(d.match_rate)}`;
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Daily match rate
+  new Chart(document.getElementById("rate"), {
+    type: "line",
+    data: {
+      labels: D.days.map(shortDate),
+      datasets: [{
+        label: "Match rate", data: D.daily.map((d) => (d.total ? d.match_rate * 100 : null)),
+        borderColor: MATCHED, backgroundColor: MATCHED, borderWidth: 2, pointRadius: 0, pointHoverRadius: 5,
+        pointHoverBorderColor: surface, pointHoverBorderWidth: 2, tension: 0, spanGaps: true,
+      }],
+    },
+    options: {
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false },
+      scales: {
+        x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkipPadding: 16 } },
+        y: { beginAtZero: true, border: { display: false }, ticks: { callback: (v) => v + "%" } },
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: (items) => D.days[items[0].dataIndex],
+            label: (item) => {
+              const d = D.daily[item.dataIndex];
+              return ` ${pct(d.match_rate)} (${fmt(d.matched)} of ${fmt(d.total)})`;
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Horizontal stacked policy / group bars
+  const hbars = (id, rows) => new Chart(document.getElementById(id), {
+    type: "bar",
+    data: {
+      labels: rows.map((r) => r.label.length > 34 ? r.label.slice(0, 33) + "…" : r.label),
+      datasets: [
+        bar("Matched", rows.map((r) => r.matched), MATCHED, { borderWidth: 0 }),
+        bar("Unmatched", rows.map((r) => r.unmatched), UNMATCHED, { borderWidth: { left: 2, top: 0, right: 0, bottom: 0 } }),
+      ],
+    },
+    options: {
+      indexAxis: "y",
+      maintainAspectRatio: false,
+      interaction: { mode: "index", intersect: false, axis: "y" },
+      scales: {
+        x: { stacked: true, beginAtZero: true, border: { display: false }, ticks: { precision: 0 } },
+        y: { stacked: true, grid: { display: false } },
+      },
+      datasets: { bar: { categoryPercentage: 0.8, barPercentage: 0.85, maxBarThickness: 22 } },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            title: (items) => rows[items[0].dataIndex].label,
+            footer: (items) => {
+              const r = rows[items[0].dataIndex];
+              return `Evaluated ${fmt(r.total)} · match rate ${pct(r.match_rate)}`;
+            },
+          },
+        },
+      },
+    },
+  });
+  hbars("active", D.top_matching.map((key) => byKey[key]));
+  hbars("noisy", D.top_noisy.map((key) => byKey[key]));
+  hbars("repos", D.repositories.slice(0, m.top));
+  hbars("formats", D.formats.slice(0, m.top));
+
+  // Heatmap: policy x day
+  const heat = document.getElementById("heat");
+  const heatPolicies = D.policies.slice(0, 15);
+  const STEPS = 7;
+  document.getElementById("heat-note").textContent =
+    `Top ${heatPolicies.length} policies by volume${D.policies.length > heatPolicies.length ? ` (of ${D.policies.length})` : ""}; darker = more`;
+  document.getElementById("heat-scale").innerHTML = "Fewer " +
+    Array.from({ length: STEPS + 1 }, (_, i) => `<i style="background:var(--seq-${i})"></i>`).join("") + " More";
+
+  const drawHeat = (measure) => {
+    const series = (p) => p.daily_matched.map((mv, i) => measure === "matched" ? mv : measure === "unmatched" ? p.daily_unmatched[i] : mv + p.daily_unmatched[i]);
+    const rows = heatPolicies.map((p) => ({ p, values: series(p) }));
+    const peak = Math.max(1, ...rows.flatMap((r) => r.values));
+    const step = (v) => (v === 0 ? 0 : Math.max(1, Math.ceil((v / peak) * STEPS)));
+    heat.style.gridTemplateColumns = `minmax(140px, 240px) repeat(${D.days.length}, minmax(14px, 1fr))`;
+    let html = "";
+    rows.forEach(({ p, values }) => {
+      html += `<div class="name" title="${esc(p.label)}">${esc(p.label)}</div>`;
+      values.forEach((v, i) => {
+        html += `<div class="cell" style="background:var(--seq-${step(v)})" data-p="${esc(p.key)}" data-i="${i}" data-v="${v}"></div>`;
+      });
+    });
+    html += `<div></div>`;
+    D.days.forEach((d, i) => {
+      const show = i === 0 || i === D.days.length - 1 || i % Math.max(1, Math.ceil(D.days.length / 8)) === 0;
+      html += `<div class="axis">${show && i !== D.days.length - 2 ? shortDate(d) : ""}</div>`;
+    });
+    heat.innerHTML = html;
+    heat.dataset.measure = measure;
+  };
+  heat.addEventListener("mousemove", (e) => {
+    const c = e.target.closest(".cell");
+    if (!c) return hideTip();
+    const p = byKey[c.dataset.p], i = +c.dataset.i;
+    showTip(e, `<b>${esc(p.label)}</b><br>${D.days[i]}<br>
+      <span class="swatch" style="background:var(--matched)"></span> Matched ${fmt(p.daily_matched[i])}<br>
+      <span class="swatch" style="background:var(--unmatched)"></span> Unmatched ${fmt(p.daily_unmatched[i])}`);
+  });
+  heat.addEventListener("mouseleave", hideTip);
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    drawHeat(b.dataset.m);
+  }));
+  drawHeat("matched");
+
+  // Sparkline SVG
+  const spark = (values, color, w = 120, h = 22) => {
+    const peak = Math.max(1, ...values);
+    const dx = w / Math.max(1, values.length - 1);
+    const pts = values.map((v, i) => `${(i * dx).toFixed(1)},${(h - 2 - (v / peak) * (h - 4)).toFixed(1)}`).join(" ");
+    return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" points="${pts}"/></svg>`;
+  };
+
+  // Sortable tables
+  const sortable = (table, columns, rows, initial) => {
+    let sortKey = initial, dir = -1;
+    const render = () => {
+      const col = columns.find((c) => c.key === sortKey);
+      const sorted = [...rows].sort((a, b) => {
+        const av = col.sort ? col.sort(a) : a[sortKey], bv = col.sort ? col.sort(b) : b[sortKey];
+        return (av > bv ? 1 : av < bv ? -1 : 0) * dir;
+      });
+      table.innerHTML = `<thead><tr>${columns.map((c) =>
+        `<th class="${c.num ? "num" : ""}" data-k="${c.key}" ${c.key === sortKey ? `aria-sort="${dir < 0 ? "descending" : "ascending"}"` : ""}>${c.label}</th>`).join("")}</tr></thead>
+        <tbody>${sorted.map((r) => `<tr>${columns.map((c) => `<td class="${c.num ? "num" : ""} ${c.cls || ""}">${c.render ? c.render(r) : esc(r[c.key])}</td>`).join("")}</tr>`).join("")}</tbody>`;
+      table.querySelectorAll("th").forEach((th) => th.addEventListener("click", () => {
+        const c = columns.find((x) => x.key === th.dataset.k);
+        if (c.nosort) return;
+        dir = sortKey === th.dataset.k ? -dir : -1;
+        sortKey = th.dataset.k;
+        render();
+      }));
+    };
+    render();
+  };
+
+  sortable(document.getElementById("policy-table"), [
+    { key: "label", label: "Policy", cls: "name", sort: (r) => r.label.toLowerCase(),
+      render: (r) => `${esc(r.label)}${r.terminal ? '<span class="tag">terminal</span>' : ""}${r.matched === 0 ? '<span class="tag">never matched</span>' : ""}` },
+    { key: "total", label: "Evaluated", num: true, render: (r) => fmt(r.total) },
+    { key: "matched", label: "Matched", num: true, render: (r) => fmt(r.matched) },
+    { key: "unmatched", label: "Unmatched", num: true, render: (r) => fmt(r.unmatched) },
+    { key: "match_rate", label: "Match rate", num: true,
+      render: (r) => `<span class="rate">${pct(r.match_rate)}<span class="track"><span class="fill" style="width:${(r.match_rate * 100).toFixed(1)}%"></span></span></span>` },
+    { key: "trend", label: "Matches / day", nosort: true, render: (r) => spark(r.daily_matched, MATCHED) },
+    { key: "version", label: "Version", num: true, render: (r) => r.version ?? "" },
+    { key: "last_seen", label: "Last evaluated", render: (r) => esc((r.last_seen || "").replace("T", " ").slice(0, 16)) },
+  ], D.policies, "matched");
+
+  sortable(document.getElementById("package-table"), [
+    { key: "label", label: "Package", cls: "name", sort: (r) => r.label.toLowerCase() },
+    { key: "format", label: "Format" },
+    { key: "matched", label: "Matches", num: true, render: (r) => fmt(r.matched) },
+    { key: "trend", label: "Matches / day", nosort: true, render: (r) => spark(r.daily_matched, MATCHED) },
+    { key: "policies", label: "Matched by", cls: "name wide", sort: (r) => r.policies.length, render: (r) => `<span title="${esc(r.policies.join(", "))}">${esc(r.policies.join(", "))}</span>` },
+    { key: "last_seen", label: "Last matched", render: (r) => esc((r.last_seen || "").replace("T", " ").slice(0, 16)) },
+  ], D.packages, "matched");
+})();
+</script>
+</body>
+</html>

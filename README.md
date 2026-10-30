@@ -1,0 +1,77 @@
+# cs-decisions
+
+Visualise [Cloudsmith policy decision logs](https://docs.cloudsmith.com/api/workspaces/policies/decision/logs/v1/list)
+in the terminal (Rich) or as an HTML dashboard.
+
+It answers:
+
+- **How much is policy evaluation doing over time?** Decision logs per day, split matched / unmatched, plus daily match rate.
+- **Which policies are most active?** Ranked by matches, with a per-day sparkline.
+- **Which policies are noise?** Ranked by unmatched evaluations, with policies that never matched in the window called out.
+- **Where is it happening?** Breakdowns by repository, package format and the most-matched packages.
+- A policy × day heatmap (in the HTML dashboard) that switches between matched, unmatched and all.
+
+## Install
+
+```sh
+uv sync                 # or: pip install -e .
+uv run cs-decisions --help
+```
+
+## Authentication
+
+The first credential found wins:
+
+1. `--api-key / -k`
+2. `CLOUDSMITH_API_KEY` environment variable
+3. The Cloudsmith CLI, via `cloudsmith credential-helper generic`. This covers API keys, SSO (`cloudsmith auth`) and OIDC. `--profile` is passed through.
+4. The CLI's `credentials.ini` (`~/.cloudsmith/` or `~/.config/cloudsmith/`), read directly
+
+The workspace comes from `--workspace / -w`, `CLOUDSMITH_WORKSPACE`, or `workspace` in the CLI's `config.ini`.
+
+## Usage
+
+```sh
+# Terminal report for the last 30 days
+cs-decisions -w my-workspace
+
+# Last 90 days: terminal report plus an HTML dashboard opened in the browser
+cs-decisions -w my-workspace -d 90 --html report.html --open
+
+# An explicit window, filtered to npm and python in one repository
+cs-decisions -w my-workspace --since 2026-09-01 --until 2026-09-30 \
+  --repo <repo-slug-perm> --format npm --format python
+
+# Big pull with more parallelism, then re-render from the cache without the API
+cs-decisions -w my-workspace -d 90 -j 32 --no-terminal
+cs-decisions -w my-workspace -d 90 --offline --html report.html
+
+# Try it without API access
+cs-decisions --demo --html demo.html --open
+```
+
+Dates are UTC days.
+
+## Caching
+
+Logs for a finished UTC day never change, so each day's aggregates are saved to
+`~/.cache/cs-decisions/<workspace>-<filters>.sqlite` (or under `$XDG_CACHE_HOME`) as soon as that day finishes fetching.
+Later runs fetch only days that aren't cached yet, plus today. Only aggregates are stored, not raw logs. A 2M-log test window used a 13MB cache.
+
+- `--refresh` re-fetches every day in the window.
+- `--offline` renders from the cache only.
+- `--no-cache` neither reads nor writes the cache.
+- If you interrupt a long first pull (Ctrl-C), days that finished are kept, so the next run resumes from there.
+
+Each set of filters (`--policy`, `--repo`, `--format`, `--package`) gets its own cache file.
+
+## Performance
+
+- **Streaming aggregation.** Each page is folded into per-day counts and then dropped, so memory depends on how many distinct policies, repos and packages there are, not on log volume.
+- **Parallel fetch** (`--workers / -j`, default 8). Every day is a job on a shared queue. When a worker is idle, a busy job splits off the back half of its remaining time range, so even a single heavy day fans out across all workers. Each job pages with the `after_id` cursor, and a split job reuses the same cursor, so no log is fetched twice or skipped.
+- Requests ask for `--page-size 1000`. If the server caps pages lower, the fetcher detects it and still reads every page.
+- A `429` (or `X-RateLimit-Remaining: 0`) pauses all workers together until the limit resets.
+- After each fetch a stats line reports the request count, average latency and any rate limiting. With no rate limiting, a higher `-j` is usually faster. If you see throttling, lower it.
+- `CLOUDSMITH_API_HOST` points the client at another API host (useful for testing).
+
+The HTML dashboard is a single file. It loads Chart.js from cdnjs, so it needs network access when opened.

@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+dist/
+*.egg-info/
+decision-logs*.json
+*.html
+!src/cs_decisions/templates/*.html
