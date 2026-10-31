@@ -4,141 +4,212 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__</title>
+<script>
+  try { const t = localStorage.getItem("cs-decisions-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+  /* Cloudsmith brand tokens: cool black #092f45, Cloudsmith blue #2a6fe1, cool grey #f1f3f6. */
   :root {
     color-scheme: light;
-    --surface-0: #f4f3f0;
-    --surface-1: #fcfcfb;
-    --surface-2: #f0efec;
-    --border: #e4e2dc;
-    --grid: #ebe9e4;
-    --text-primary: #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted: #7a7974;
-    --matched: #2a78d6;
-    --unmatched: #eb6834;
-    --seq-0: #f0efec;
-    --seq-1: #cde2fb; --seq-2: #9ec5f4; --seq-3: #6da7ec; --seq-4: #3987e5;
-    --seq-5: #256abf; --seq-6: #184f95; --seq-7: #0d366b;
-    --seq-ink-light: #0b0b0b; --seq-ink-dark: #ffffff;
+    --page: #eff3fa;
+    --card: #ffffff;
+    --card-raised: #f9fcff;
+    --border: rgba(9, 47, 69, .1);
+    --border-strong: rgba(9, 47, 69, .18);
+    --chart-grid: rgba(9, 47, 69, .07);
+    --text-primary: #092f45;
+    --text-secondary: rgba(9, 47, 69, .65);
+    --text-muted: rgba(9, 47, 69, .5);
+    --accent: #2a6fe1;
+    --matched: #2a6fe1;
+    --unmatched: #de7056;
+    --grid-page: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Cg%20stroke%3D%22%23e1eaf3%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%222%202%22%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2240%22/%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%2240%22%20y2%3D%220%22/%3E%3C/g%3E%3C/svg%3E");
+    --grid-hero: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Cg%20stroke%3D%22%23c5d4de%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%222%202%22%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2240%22/%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%2240%22%20y2%3D%220%22/%3E%3C/g%3E%3C/svg%3E");
+    --seq-0: #eff3fa;
+    --seq-1: #dfebfe; --seq-2: #b7d2ff; --seq-3: #90b7f6; --seq-4: #6ca3fe;
+    --seq-5: #2a6fe1; --seq-6: #134596; --seq-7: #112b5e;
+    --font-head: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      color-scheme: dark;
-      --surface-0: #111110;
-      --surface-1: #1a1a19;
-      --surface-2: #262624;
-      --border: #33332f;
-      --grid: #2a2a27;
-      --text-primary: #f0efec;
-      --text-secondary: #c3c2b7;
-      --text-muted: #8f8e86;
-      --matched: #3987e5;
-      --unmatched: #d95926;
-      --seq-0: #262624;
-      --seq-1: #0d366b; --seq-2: #104281; --seq-3: #184f95; --seq-4: #256abf;
-      --seq-5: #3987e5; --seq-6: #6da7ec; --seq-7: #9ec5f4;
-      --seq-ink-light: #ffffff; --seq-ink-dark: #0b0b0b;
+    color-scheme: dark;
+    --page: #031c2b;
+    --card: #041e2e;
+    --card-raised: #092f45;
+    --border: rgba(255, 255, 255, .09);
+    --border-strong: rgba(255, 255, 255, .16);
+    --chart-grid: rgba(255, 255, 255, .07);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, .8);
+    --text-muted: rgba(255, 255, 255, .6);
+    --accent: #6ca3fe;
+    --matched: #498af6;
+    --unmatched: #de7056;
+    --grid-page: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Cg%20stroke%3D%22%2306283c%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%222%202%22%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2240%22/%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%2240%22%20y2%3D%220%22/%3E%3C/g%3E%3C/svg%3E");
+    --grid-hero: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Cg%20stroke%3D%22%230d3a55%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%222%202%22%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2240%22/%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%2240%22%20y2%3D%220%22/%3E%3C/g%3E%3C/svg%3E");
+    --seq-0: #092f45;
+    --seq-1: #112b5e; --seq-2: #134596; --seq-3: #2a6fe1; --seq-4: #498af6;
+    --seq-5: #6ca3fe; --seq-6: #90b7f6; --seq-7: #b7d2ff;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --surface-0: #111110;
-    --surface-1: #1a1a19;
-    --surface-2: #262624;
-    --border: #33332f;
-    --grid: #2a2a27;
-    --text-primary: #f0efec;
-    --text-secondary: #c3c2b7;
-    --text-muted: #8f8e86;
-    --matched: #3987e5;
-    --unmatched: #d95926;
-    --seq-0: #262624;
-    --seq-1: #0d366b; --seq-2: #104281; --seq-3: #184f95; --seq-4: #256abf;
-    --seq-5: #3987e5; --seq-6: #6da7ec; --seq-7: #9ec5f4;
-    --seq-ink-light: #ffffff; --seq-ink-dark: #0b0b0b;
+    --page: #031c2b;
+    --card: #041e2e;
+    --card-raised: #092f45;
+    --border: rgba(255, 255, 255, .09);
+    --border-strong: rgba(255, 255, 255, .16);
+    --chart-grid: rgba(255, 255, 255, .07);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, .8);
+    --text-muted: rgba(255, 255, 255, .6);
+    --accent: #6ca3fe;
+    --matched: #498af6;
+    --unmatched: #de7056;
+    --grid-page: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Cg%20stroke%3D%22%2306283c%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%222%202%22%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2240%22/%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%2240%22%20y2%3D%220%22/%3E%3C/g%3E%3C/svg%3E");
+    --grid-hero: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%3E%3Cg%20stroke%3D%22%230d3a55%22%20stroke-width%3D%222%22%20stroke-dasharray%3D%222%202%22%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%2240%22/%3E%3Cline%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%2240%22%20y2%3D%220%22/%3E%3C/g%3E%3C/svg%3E");
+    --seq-0: #092f45;
+    --seq-1: #112b5e; --seq-2: #134596; --seq-3: #2a6fe1; --seq-4: #498af6;
+    --seq-5: #6ca3fe; --seq-6: #90b7f6; --seq-7: #b7d2ff;
   }
 
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--surface-0);
+    background: var(--page) var(--grid-page) 0 0 / 40px 40px;
     color: var(--text-primary);
-    font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font: 14px/1.5 var(--font-body);
+    -webkit-font-smoothing: antialiased;
   }
-  main { max-width: 1320px; margin: 0 auto; padding: 28px 16px 64px; }
-  header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; margin-bottom: 20px; }
-  h1 { font-size: 22px; margin: 0 0 4px; font-weight: 650; letter-spacing: -0.01em; }
-  h2 { font-size: 14px; margin: 0; font-weight: 600; }
-  .sub, .note { color: var(--text-secondary); }
-  .note { font-size: 12px; margin-top: 2px; }
-  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-  .chip { background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; font-size: 12px; color: var(--text-secondary); }
+  main { max-width: 1320px; margin: 0 auto; padding: 0 16px 48px; }
+
+  /* Hero: the Cloudsmith dashed grid, fading out at the edges. */
+  .hero { position: relative; margin: 0 -16px 8px; padding: 32px 16px 36px; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background: var(--page) var(--grid-hero) 0 0 / 40px 40px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 100% at 30% 0%, #000 40%, transparent 85%);
+            mask-image: radial-gradient(ellipse 80% 100% at 30% 0%, #000 40%, transparent 85%);
+  }
+  .hero > * { position: relative; }
+  .marker { position: absolute; width: 9px; height: 9px; transform: translate(-4px, -4px); }
+  .marker::before, .marker::after { content: ""; position: absolute; background: var(--accent); }
+  .marker::before { left: 4px; top: 0; width: 1px; height: 9px; }
+  .marker::after { top: 4px; left: 0; height: 1px; width: 9px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 40px; }
+  .logo { display: inline-flex; align-items: center; gap: 12px; color: var(--text-primary); text-decoration: none; }
+  .logo svg { height: 22px; width: auto; display: block; }
+  .logo .product { font: 500 12px/1 var(--font-mono); color: var(--text-muted); padding-left: 12px; border-left: 1px solid var(--border-strong); letter-spacing: .02em; }
+  .theme-toggle { font: 500 11px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text-secondary);
+                   background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+  .theme-toggle:hover { color: var(--text-primary); border-color: var(--border-strong); }
+  .eyebrow { font: 500 12px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--accent); display: inline-flex; align-items: center; gap: 8px; }
+  .eyebrow::before { content: ""; width: 8px; height: 8px; background: var(--accent); transform: rotate(45deg); }
+  h1 { font: 600 clamp(28px, 4vw, 44px)/1.08 var(--font-head); letter-spacing: -0.025em; margin: 14px 0 12px; }
+  h1 .ws { color: var(--accent); }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 20px; font: 400 12px/1.4 var(--font-mono); color: var(--text-secondary); }
+  .meta b { font-weight: 500; color: var(--text-primary); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+  .chip { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px; font: 400 11px/1.4 var(--font-mono); color: var(--text-secondary); }
+
+  .section-label { display: flex; align-items: center; gap: 12px; margin: 36px 0 14px; font: 500 11px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--text-muted); }
+  .section-label .n { color: var(--accent); }
+  .section-label::after { content: ""; flex: 1; border-top: 1px dashed var(--border-strong); }
+
+  h2 { font: 600 15px/1.3 var(--font-head); margin: 0; letter-spacing: -0.01em; }
+  .note { color: var(--text-secondary); font-size: 12.5px; margin-top: 3px; }
 
   .grid { display: grid; gap: 16px; grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  .card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; min-width: 0; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; min-width: 0; }
   .span-12 { grid-column: span 12; } .span-8 { grid-column: span 8; } .span-6 { grid-column: span 6; } .span-4 { grid-column: span 4; }
   @media (max-width: 960px) { .span-8, .span-6, .span-4 { grid-column: span 12; } }
-  .card-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .card-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
 
-  .kpis { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin-bottom: 16px; }
-  .kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
-  .kpi .label { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
-  .kpi .value { font-size: 26px; font-weight: 650; letter-spacing: -0.02em; margin-top: 2px; font-variant-numeric: tabular-nums; }
-  .kpi .detail { font-size: 12px; color: var(--text-muted); }
-  .swatch { width: 10px; height: 10px; border-radius: 3px; display: inline-block; flex: none; }
+  .kpis { display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); background: var(--border);
+           border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .kpi { background: var(--card); padding: 16px 18px 18px; }
+  .kpi .label { font: 500 11px/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); display: flex; align-items: center; gap: 7px; }
+  .kpi .value { font: 600 30px/1.1 var(--font-head); letter-spacing: -0.02em; margin-top: 10px; font-variant-numeric: tabular-nums; }
+  .kpi .detail { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; }
 
-  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--text-secondary); align-items: center; }
+  .legend { display: flex; gap: 14px; font: 400 11px/1 var(--font-mono); color: var(--text-secondary); align-items: center; text-transform: uppercase; letter-spacing: .05em; }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
   .chart-box { position: relative; height: 300px; }
   .chart-box.tall { height: 360px; }
 
-  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .seg button { background: none; border: 0; padding: 4px 10px; font: inherit; font-size: 12px; color: var(--text-secondary); cursor: pointer; }
-  .seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--text-primary); font-weight: 600; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .seg button { background: none; border: 0; padding: 6px 10px; font: 500 11px/1 var(--font-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--text-secondary); cursor: pointer; }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
 
   .heat-wrap { overflow-x: auto; }
   .heat { display: grid; gap: 2px; align-items: center; width: 100%; min-width: 560px; }
   .heat .name { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; max-width: 240px; }
-  .heat .cell { height: 22px; min-width: 14px; border-radius: 3px; background: var(--seq-0); }
-  .heat .axis { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .heat .cell { height: 22px; min-width: 14px; border-radius: 2px; background: var(--seq-0); }
+  .heat .cell:hover { outline: 2px solid var(--text-primary); outline-offset: -1px; }
+  .heat .axis { font: 400 10.5px/1.6 var(--font-mono); color: var(--text-muted); white-space: nowrap; }
   .heat .axis:last-child { direction: rtl; }
-  .scale { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
-  .scale i { width: 16px; height: 10px; border-radius: 2px; display: inline-block; }
+  .scale { display: flex; align-items: center; gap: 3px; font: 400 11px/1 var(--font-mono); color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+  .scale i { width: 14px; height: 10px; border-radius: 2px; display: inline-block; }
 
   table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
-  th { font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; user-select: none; position: sticky; top: 0; background: var(--surface-1); }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--chart-grid); white-space: nowrap; }
+  th { font: 500 11px/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); cursor: pointer; user-select: none;
+        position: sticky; top: 0; background: var(--card); border-bottom: 1px solid var(--border-strong); }
+  th:hover { color: var(--text-primary); }
+  tbody tr:hover td { background: var(--card-raised); }
   th.num, td.num { text-align: right; }
-  th[aria-sort="descending"]::after { content: " ↓"; } th[aria-sort="ascending"]::after { content: " ↑"; }
-  td.name { max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
-  td.wide { max-width: 520px; }
+  th[aria-sort="descending"]::after { content: " ↓"; color: var(--accent); } th[aria-sort="ascending"]::after { content: " ↑"; color: var(--accent); }
+  td.name { max-width: 320px; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+  td.wide { max-width: 520px; font-weight: 400; color: var(--text-secondary); }
   .table-wrap { overflow: auto; max-height: 520px; }
   .rate { display: inline-flex; align-items: center; gap: 8px; }
-  .rate .track { width: 64px; height: 6px; border-radius: 3px; background: var(--unmatched); overflow: hidden; display: inline-block; }
-  .rate .fill { height: 100%; background: var(--matched); display: block; border-right: 2px solid var(--surface-1); }
-  .tag { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-secondary); margin-left: 6px; }
+  .rate .track { width: 64px; height: 6px; border-radius: 1px; background: var(--unmatched); overflow: hidden; display: inline-block; }
+  .rate .fill { height: 100%; background: var(--matched); display: block; border-right: 2px solid var(--card); }
+  .tag { font: 500 10px/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: .05em; padding: 1px 6px; border-radius: 3px;
+          border: 1px solid var(--border-strong); color: var(--text-secondary); margin-left: 8px; }
   svg.spark { display: block; }
 
-  #tip { position: fixed; pointer-events: none; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
-         border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 20px rgba(0,0,0,.15); display: none; z-index: 10; }
+  footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 40px; padding-top: 18px;
+            border-top: 1px dashed var(--border-strong); font: 400 11px/1.4 var(--font-mono); color: var(--text-muted); }
+  footer svg { height: 14px; width: auto; color: var(--text-muted); }
+
+  #tip { position: fixed; pointer-events: none; background: var(--card); color: var(--text-primary); border: 1px solid var(--border-strong);
+          border-radius: 6px; padding: 8px 10px; font-size: 12px; box-shadow: 0 8px 24px rgba(9, 47, 69, .18); display: none; z-index: 10; }
   #tip b { font-weight: 600; }
   .empty { padding: 48px; text-align: center; color: var(--text-secondary); }
 </style>
 </head>
 <body>
 <main>
-  <header>
-    <div>
-      <h1 id="title">Policy decision logs</h1>
-      <div class="sub" id="subtitle"></div>
+  <header class="hero">
+    <i class="marker" style="left:calc(16px + 40px * 12); top:40px" aria-hidden="true"></i>
+    <i class="marker" style="left:calc(16px + 40px * 20); top:160px" aria-hidden="true"></i>
+    <i class="marker" style="left:calc(16px + 40px * 27); top:80px" aria-hidden="true"></i>
+    <div class="topbar">
+      <span class="logo" aria-label="Cloudsmith">
+        <svg viewBox="0 0 164 28" role="img" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M27.34 12.6902V15.6713L15.4155 27.5959H12.4343L0.509766 15.6713V12.6902L12.4343 0.765625H15.4155L27.34 12.6902ZM13.9249 21.1799C17.7903 21.1799 20.9238 18.0464 20.9238 14.1811C20.9238 10.3157 17.7903 7.18217 13.9249 7.18217C10.0595 7.18217 6.92604 10.3157 6.92604 14.1811C6.92604 18.0464 10.0595 21.1799 13.9249 21.1799Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M99.5398 2.48998V20.5516L99.2742 20.8172H97.4149L97.1493 20.5516L96.8837 19.4892H96.6181C95.8212 20.4985 94.5729 21.0828 93.1651 21.0828C89.4465 21.0828 87.3216 18.1611 87.3216 14.1769C87.3216 10.1927 89.4465 7.271 93.1651 7.271C94.4932 7.271 95.7947 7.80222 96.6181 8.86467H96.8837V2.48998L97.1493 2.22437H99.2742L99.5398 2.48998ZM93.4307 18.6923C95.5556 18.6923 96.8837 17.3643 96.8837 14.1769C96.8837 10.9896 95.5556 9.66151 93.4307 9.66151C91.3058 9.66151 89.9778 11.2286 89.9778 14.1769C89.9778 17.1252 91.3058 18.6923 93.4307 18.6923ZM58.8928 14.1769C58.8928 18.4267 61.2833 21.0828 65.2675 21.0828C69.2517 21.0828 71.6422 18.4267 71.6422 14.1769C71.6422 9.92712 69.2517 7.271 65.2675 7.271C61.2833 7.271 58.8928 9.92712 58.8928 14.1769ZM61.5489 14.1769C61.5489 11.2552 62.877 9.66151 65.2675 9.66151C67.658 9.66151 68.9861 11.2552 68.9861 14.1769C68.9861 17.0987 67.658 18.6923 65.2675 18.6923C62.877 18.6923 61.5489 17.0987 61.5489 14.1769ZM84.9239 7.80222L84.6583 7.53661H82.5334L82.2677 7.80222V14.1769C82.2677 17.3643 80.9131 18.6923 79.0804 18.6923C76.9555 18.6923 76.4243 17.0987 76.4243 15.505V7.80222L76.1587 7.53661H74.0338L73.7681 7.80222V15.505C73.7681 18.4002 75.0962 21.0828 78.8148 21.0828C80.0897 21.0828 81.3115 20.4454 82.0021 19.4892H82.2677L82.5334 20.5516L82.799 20.8172H84.6583L84.9239 20.5516V7.80222ZM112.55 17.0987C112.55 14.7081 111.222 13.6457 108.565 13.1145C105.909 12.5832 104.847 12.3176 104.847 10.9896C104.847 9.92712 105.909 9.66151 107.237 9.66151C109.097 9.66151 109.628 10.4583 109.628 11.2552L109.893 11.5208H112.018L112.284 11.2552C112.284 8.59906 110.159 7.271 107.237 7.271C103.519 7.271 102.191 9.13028 102.191 10.9896C102.191 13.3801 103.784 14.4425 106.441 14.9738C109.097 15.505 109.893 15.7706 109.893 17.0987C109.893 18.1611 109.097 18.6923 107.237 18.6923C105.378 18.6923 104.581 17.8955 104.581 16.5674L104.316 16.3018H102.191L101.925 16.5674C101.925 19.4892 103.784 21.0828 107.237 21.0828C110.956 21.0828 112.55 19.2236 112.55 17.0987ZM133.532 12.5832V20.5516L133.266 20.8172H131.141L130.876 20.5516V12.5832C130.876 10.9896 130.61 9.66151 128.485 9.66151C126.626 9.66151 125.564 10.9896 125.564 13.1145V20.5516L125.298 20.8172H123.173L122.907 20.5516V12.5832C122.907 10.9896 122.642 9.66151 120.517 9.66151C119.189 9.66151 117.595 10.4583 117.595 13.1145V20.5516L117.33 20.8172H115.205L114.939 20.5516V7.80222L115.205 7.53661H117.064L117.33 7.80222L117.595 8.86467H117.861C118.392 8.06784 119.455 7.271 121.314 7.271C123.439 7.271 124.236 8.33345 124.767 9.13029H125.032C125.829 8.06784 127.157 7.271 129.017 7.271C132.735 7.271 133.532 9.66151 133.532 12.5832ZM139.098 5.1461V3.0212L138.833 2.75559H136.708L136.442 3.0212V5.1461L136.708 5.41171H138.833L139.098 5.1461ZM139.098 7.80222L138.833 7.53661H136.708L136.442 7.80222V20.5516L136.708 20.8172H138.833L139.098 20.5516V7.80222ZM149.716 18.6923V20.5516L149.45 20.8172H147.325C145.466 20.8172 143.607 19.7548 143.607 17.3643V10.1927L143.341 9.92712H141.482L141.216 9.66151V7.80222L141.482 7.53661H143.341L143.607 7.271V4.88049L143.872 4.61488H145.997L146.263 4.88049V7.271L146.528 7.53661H149.45L149.716 7.80222V9.66151L149.45 9.92712H146.528L146.263 10.1927V17.3643C146.263 18.1611 146.794 18.4267 147.325 18.4267H149.45L149.716 18.6923ZM163.79 20.5516V12.8489C163.79 9.95368 162.728 7.271 158.743 7.271C157.336 7.271 156.061 7.85535 155.29 8.86467H155.025V2.48998L154.759 2.22437H152.634L152.369 2.48998V20.5516L152.634 20.8172H154.759L155.025 20.5516V13.9113C155.025 10.724 156.353 9.66151 158.478 9.66151C160.603 9.66151 161.134 11.2552 161.134 12.8489V20.5516L161.399 20.8172H163.524L163.79 20.5516ZM40.3305 14.1717C40.3305 11.2476 41.6596 9.65266 44.052 9.65266C46.1786 9.65266 46.9761 10.716 47.2419 11.7792L47.5077 12.0451H49.6343L49.9001 11.7792C49.6343 9.38684 47.7735 7.26025 44.052 7.26025C40.0646 7.26025 37.6722 9.91848 37.6722 14.1717C37.6722 18.4248 40.0646 21.0831 44.052 21.0831C47.7735 21.0831 49.6343 18.9565 49.9001 16.5641L49.6343 16.2982H47.5077L47.2419 16.5641C46.9761 17.6274 46.1786 18.6906 44.052 18.6906C41.6596 18.6906 40.3305 17.0957 40.3305 14.1717ZM57.7202 18.7425V20.6017L57.4546 20.8674H56.048C54.1887 20.8674 52.3295 19.8049 52.3295 17.4144L52.3293 2.48998L52.595 2.22437H54.7198L54.9854 2.48998L54.9856 17.4144C54.9856 18.2113 55.5168 18.4769 56.048 18.4769H57.4546L57.7202 18.7425Z" fill="currentColor"></path></svg>
+        <span class="product">decision logs</span>
+      </span>
+      <button class="theme-toggle" id="theme-toggle" type="button">Theme</button>
     </div>
+    <div class="eyebrow">Policy decision logs</div>
+    <h1 id="title">Workspace</h1>
+    <div class="meta" id="meta"></div>
     <div class="chips" id="chips"></div>
   </header>
 
+  <div class="section-label"><span class="n">01</span>Overview</div>
   <section class="kpis" id="kpis"></section>
 
+  <div class="section-label"><span class="n">02</span>Volume over time</div>
   <section class="grid">
     <div class="card span-8">
       <div class="card-head">
@@ -151,7 +222,10 @@
       <div class="card-head"><div><h2>Daily match rate</h2><div class="note">Share of evaluations that matched a policy</div></div></div>
       <div class="chart-box"><canvas id="rate"></canvas></div>
     </div>
+  </section>
 
+  <div class="section-label"><span class="n">03</span>Policies</div>
+  <section class="grid">
     <div class="card span-6">
       <div class="card-head">
         <div><h2>Most active policies</h2><div class="note">Ranked by matches</div></div>
@@ -181,7 +255,10 @@
       </div>
       <div class="heat-wrap"><div class="heat" id="heat"></div></div>
     </div>
+  </section>
 
+  <div class="section-label"><span class="n">04</span>Where it happens</div>
+  <section class="grid">
     <div class="card span-6">
       <div class="card-head"><div><h2>Repositories</h2><div class="note">Decision logs by repository</div></div></div>
       <div class="chart-box"><canvas id="repos"></canvas></div>
@@ -190,7 +267,10 @@
       <div class="card-head"><div><h2>Package formats</h2><div class="note">Decision logs by format</div></div></div>
       <div class="chart-box"><canvas id="formats"></canvas></div>
     </div>
+  </section>
 
+  <div class="section-label"><span class="n">05</span>Detail</div>
+  <section class="grid">
     <div class="card span-12">
       <div class="card-head"><div><h2>All policies</h2><div class="note">Click a column to sort. The trend column shows matches per day.</div></div></div>
       <div class="table-wrap"><table id="policy-table"></table></div>
@@ -201,12 +281,19 @@
       <div class="table-wrap"><table id="package-table"></table></div>
     </div>
   </section>
+
+  <footer>
+    <span>Generated by cs-decisions from the Cloudsmith API · <span id="generated"></span></span>
+    <svg viewBox="0 0 164 28" role="img" aria-label="Cloudsmith"><path fill-rule="evenodd" clip-rule="evenodd" d="M27.34 12.6902V15.6713L15.4155 27.5959H12.4343L0.509766 15.6713V12.6902L12.4343 0.765625H15.4155L27.34 12.6902ZM13.9249 21.1799C17.7903 21.1799 20.9238 18.0464 20.9238 14.1811C20.9238 10.3157 17.7903 7.18217 13.9249 7.18217C10.0595 7.18217 6.92604 10.3157 6.92604 14.1811C6.92604 18.0464 10.0595 21.1799 13.9249 21.1799Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M99.5398 2.48998V20.5516L99.2742 20.8172H97.4149L97.1493 20.5516L96.8837 19.4892H96.6181C95.8212 20.4985 94.5729 21.0828 93.1651 21.0828C89.4465 21.0828 87.3216 18.1611 87.3216 14.1769C87.3216 10.1927 89.4465 7.271 93.1651 7.271C94.4932 7.271 95.7947 7.80222 96.6181 8.86467H96.8837V2.48998L97.1493 2.22437H99.2742L99.5398 2.48998ZM93.4307 18.6923C95.5556 18.6923 96.8837 17.3643 96.8837 14.1769C96.8837 10.9896 95.5556 9.66151 93.4307 9.66151C91.3058 9.66151 89.9778 11.2286 89.9778 14.1769C89.9778 17.1252 91.3058 18.6923 93.4307 18.6923ZM58.8928 14.1769C58.8928 18.4267 61.2833 21.0828 65.2675 21.0828C69.2517 21.0828 71.6422 18.4267 71.6422 14.1769C71.6422 9.92712 69.2517 7.271 65.2675 7.271C61.2833 7.271 58.8928 9.92712 58.8928 14.1769ZM61.5489 14.1769C61.5489 11.2552 62.877 9.66151 65.2675 9.66151C67.658 9.66151 68.9861 11.2552 68.9861 14.1769C68.9861 17.0987 67.658 18.6923 65.2675 18.6923C62.877 18.6923 61.5489 17.0987 61.5489 14.1769ZM84.9239 7.80222L84.6583 7.53661H82.5334L82.2677 7.80222V14.1769C82.2677 17.3643 80.9131 18.6923 79.0804 18.6923C76.9555 18.6923 76.4243 17.0987 76.4243 15.505V7.80222L76.1587 7.53661H74.0338L73.7681 7.80222V15.505C73.7681 18.4002 75.0962 21.0828 78.8148 21.0828C80.0897 21.0828 81.3115 20.4454 82.0021 19.4892H82.2677L82.5334 20.5516L82.799 20.8172H84.6583L84.9239 20.5516V7.80222ZM112.55 17.0987C112.55 14.7081 111.222 13.6457 108.565 13.1145C105.909 12.5832 104.847 12.3176 104.847 10.9896C104.847 9.92712 105.909 9.66151 107.237 9.66151C109.097 9.66151 109.628 10.4583 109.628 11.2552L109.893 11.5208H112.018L112.284 11.2552C112.284 8.59906 110.159 7.271 107.237 7.271C103.519 7.271 102.191 9.13028 102.191 10.9896C102.191 13.3801 103.784 14.4425 106.441 14.9738C109.097 15.505 109.893 15.7706 109.893 17.0987C109.893 18.1611 109.097 18.6923 107.237 18.6923C105.378 18.6923 104.581 17.8955 104.581 16.5674L104.316 16.3018H102.191L101.925 16.5674C101.925 19.4892 103.784 21.0828 107.237 21.0828C110.956 21.0828 112.55 19.2236 112.55 17.0987ZM133.532 12.5832V20.5516L133.266 20.8172H131.141L130.876 20.5516V12.5832C130.876 10.9896 130.61 9.66151 128.485 9.66151C126.626 9.66151 125.564 10.9896 125.564 13.1145V20.5516L125.298 20.8172H123.173L122.907 20.5516V12.5832C122.907 10.9896 122.642 9.66151 120.517 9.66151C119.189 9.66151 117.595 10.4583 117.595 13.1145V20.5516L117.33 20.8172H115.205L114.939 20.5516V7.80222L115.205 7.53661H117.064L117.33 7.80222L117.595 8.86467H117.861C118.392 8.06784 119.455 7.271 121.314 7.271C123.439 7.271 124.236 8.33345 124.767 9.13029H125.032C125.829 8.06784 127.157 7.271 129.017 7.271C132.735 7.271 133.532 9.66151 133.532 12.5832ZM139.098 5.1461V3.0212L138.833 2.75559H136.708L136.442 3.0212V5.1461L136.708 5.41171H138.833L139.098 5.1461ZM139.098 7.80222L138.833 7.53661H136.708L136.442 7.80222V20.5516L136.708 20.8172H138.833L139.098 20.5516V7.80222ZM149.716 18.6923V20.5516L149.45 20.8172H147.325C145.466 20.8172 143.607 19.7548 143.607 17.3643V10.1927L143.341 9.92712H141.482L141.216 9.66151V7.80222L141.482 7.53661H143.341L143.607 7.271V4.88049L143.872 4.61488H145.997L146.263 4.88049V7.271L146.528 7.53661H149.45L149.716 7.80222V9.66151L149.45 9.92712H146.528L146.263 10.1927V17.3643C146.263 18.1611 146.794 18.4267 147.325 18.4267H149.45L149.716 18.6923ZM163.79 20.5516V12.8489C163.79 9.95368 162.728 7.271 158.743 7.271C157.336 7.271 156.061 7.85535 155.29 8.86467H155.025V2.48998L154.759 2.22437H152.634L152.369 2.48998V20.5516L152.634 20.8172H154.759L155.025 20.5516V13.9113C155.025 10.724 156.353 9.66151 158.478 9.66151C160.603 9.66151 161.134 11.2552 161.134 12.8489V20.5516L161.399 20.8172H163.524L163.79 20.5516ZM40.3305 14.1717C40.3305 11.2476 41.6596 9.65266 44.052 9.65266C46.1786 9.65266 46.9761 10.716 47.2419 11.7792L47.5077 12.0451H49.6343L49.9001 11.7792C49.6343 9.38684 47.7735 7.26025 44.052 7.26025C40.0646 7.26025 37.6722 9.91848 37.6722 14.1717C37.6722 18.4248 40.0646 21.0831 44.052 21.0831C47.7735 21.0831 49.6343 18.9565 49.9001 16.5641L49.6343 16.2982H47.5077L47.2419 16.5641C46.9761 17.6274 46.1786 18.6906 44.052 18.6906C41.6596 18.6906 40.3305 17.0957 40.3305 14.1717ZM57.7202 18.7425V20.6017L57.4546 20.8674H56.048C54.1887 20.8674 52.3295 19.8049 52.3295 17.4144L52.3293 2.48998L52.595 2.22437H54.7198L54.9854 2.48998L54.9856 17.4144C54.9856 18.2113 55.5168 18.4769 56.048 18.4769H57.4546L57.7202 18.7425Z" fill="currentColor"></path></svg>
+  </footer>
 </main>
 <div id="tip" role="tooltip"></div>
 
 <script type="application/json" id="payload">__PAYLOAD__</script>
 <script>
-(() => {
+(async () => {
+  // Charts draw on canvas, so give the web fonts a moment to arrive first.
+  try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch (e) {}
   const D = JSON.parse(document.getElementById("payload").textContent);
   const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   const fmt = (n) => Number(n).toLocaleString();
@@ -224,13 +311,31 @@
 
   // Header
   const m = D.meta, k = D.kpis;
-  document.getElementById("title").textContent = `Policy decision logs · ${m.workspace}`;
-  document.getElementById("subtitle").textContent = `${m.start} → ${m.end} · ${D.days.length} days · generated ${m.generated}`;
+  const title = document.getElementById("title");
+  title.textContent = "";
+  title.append(document.createTextNode("Activity in "), Object.assign(document.createElement("span"), { className: "ws", textContent: m.workspace }));
+  document.getElementById("meta").innerHTML = [
+    ["Window", `${m.start} → ${m.end}`],
+    ["Days", D.days.length],
+    ["Logs", fmt(k.total)],
+  ].map(([label, v]) => `<span>${label} <b>${esc(v)}</b></span>`).join("");
+  document.getElementById("generated").textContent = m.generated;
   document.getElementById("chips").innerHTML = Object.entries(m.filters)
     .map(([key, v]) => `<span class="chip">${esc(key)}: ${esc(Array.isArray(v) ? v.join(", ") : v)}</span>`).join("");
 
+  const root = document.documentElement;
+  const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const toggle = document.getElementById("theme-toggle");
+  toggle.textContent = isDark() ? "Light mode" : "Dark mode";
+  toggle.addEventListener("click", () => {
+    // Charts read their colours once at render, so reload into the new theme.
+    try { localStorage.setItem("cs-decisions-theme", isDark() ? "light" : "dark"); } catch (e) { root.dataset.theme = isDark() ? "light" : "dark"; }
+    location.reload();
+  });
+
   if (!k.total) {
-    document.querySelector(".grid").innerHTML = '<div class="card span-12 empty">No decision logs in this window.</div>';
+    document.querySelectorAll(".section-label, .grid, .kpis").forEach((el) => el.remove());
+    document.querySelector("footer").insertAdjacentHTML("beforebegin", '<div class="card empty" style="margin-top:24px">No decision logs in this window.</div>');
     return;
   }
 
@@ -250,16 +355,16 @@
     <div class="value">${value}</div><div class="detail">${esc(detail)}</div></div>`).join("");
 
   // Chart.js defaults
-  Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+  Chart.defaults.font.family = css("--font-body");
   Chart.defaults.font.size = 12;
   Chart.defaults.color = css("--text-secondary");
-  Chart.defaults.borderColor = css("--grid");
+  Chart.defaults.borderColor = css("--chart-grid");
   Chart.defaults.plugins.legend.display = false;
   Object.assign(Chart.defaults.plugins.tooltip, {
-    backgroundColor: css("--surface-1"), titleColor: css("--text-primary"), bodyColor: css("--text-primary"),
-    borderColor: css("--border"), borderWidth: 1, padding: 10, boxPadding: 4, usePointStyle: true,
+    backgroundColor: css("--card"), titleColor: css("--text-primary"), bodyColor: css("--text-primary"),
+    borderColor: css("--border-strong"), borderWidth: 1, padding: 10, boxPadding: 4, usePointStyle: true,
   });
-  const surface = css("--surface-1");
+  const surface = css("--card");
   const MATCHED = css("--matched"), UNMATCHED = css("--unmatched");
   const bar = (label, data, color, extra = {}) => ({
     label, data, backgroundColor: color, borderColor: surface, borderWidth: { top: 2, right: 0, bottom: 0, left: 0 },
@@ -373,7 +478,7 @@
   const heatPolicies = D.policies.slice(0, 15);
   const STEPS = 7;
   document.getElementById("heat-note").textContent =
-    `Top ${heatPolicies.length} policies by volume${D.policies.length > heatPolicies.length ? ` (of ${D.policies.length})` : ""}; darker = more`;
+    `Top ${heatPolicies.length} policies by volume${D.policies.length > heatPolicies.length ? ` (of ${D.policies.length})` : ""}; ${isDark() ? "brighter" : "darker"} = more`;
   document.getElementById("heat-scale").innerHTML = "Fewer " +
     Array.from({ length: STEPS + 1 }, (_, i) => `<i style="background:var(--seq-${i})"></i>`).join("") + " More";
 
