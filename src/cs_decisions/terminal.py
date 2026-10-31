@@ -13,8 +13,8 @@ from rich.text import Text
 
 from .analysis import Bucket, Summary, top_matching, top_noisy
 
-MATCHED = "#3987e5"
-UNMATCHED = "#eb6834"
+MATCHED = "#498af6"  # Cloudsmith blue (dark-surface step)
+UNMATCHED = "#de7056"  # Cloudsmith salmon, darkened for contrast
 MUTED = "grey50"
 SPARKS = "▁▂▃▄▅▆▇█"
 LOWER = " ▁▂▃▄▅▆▇█"

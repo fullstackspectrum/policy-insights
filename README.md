@@ -11,6 +11,21 @@ It answers:
 - **Where is it happening?** Breakdowns by repository, package format and the most-matched packages.
 - A policy × day heatmap (in the HTML dashboard) that switches between matched, unmatched and all.
 
+## Screenshots
+
+These screenshots use generated demo data (`--demo`).
+
+**HTML dashboard** (`--html report.html`). It has light and dark themes and follows your system setting:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/dashboard-dark.png">
+  <img alt="HTML dashboard: headline numbers, decision logs per day split into matched and unmatched, daily match rate, and the most active and noisiest policies" src="docs/dashboard-light.png">
+</picture>
+
+**Terminal report** (the default output):
+
+<img alt="Terminal report: headline numbers, a logs-per-day chart, the last 14 days, most active and noisiest policies, repositories, formats and most-matched packages" src="docs/terminal.svg">
+
 ## Install
 
 ```sh
