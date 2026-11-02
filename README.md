@@ -5,8 +5,8 @@ in the terminal (Rich) or as an HTML dashboard.
 
 > [!NOTE]
 > **This is not an official Cloudsmith tool.** It's a personal project, built in a personal capacity
-> and published on a personal GitHub account. Cloudsmith doesn't support or endorse it. The author
-> works at Cloudsmith, but this project isn't affiliated with that role. It's provided as is, with no warranty.
+> and published on a personal GitHub account. Cloudsmith doesn't support or endorse it. It's provided
+> as is, with no warranty.
 
 It answers:
 
