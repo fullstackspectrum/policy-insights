@@ -11,7 +11,7 @@ from pathlib import Path
 from .analysis import Summary, top_matching, top_noisy
 
 
-def build_payload(summary: Summary, *, workspace: str, top: int, filters: dict) -> dict:
+def build_payload(summary: Summary, *, workspace: str, top: int, filters: dict, view: str = "all") -> dict:
     busiest = summary.busiest_day
     return {
         "meta": {
@@ -21,6 +21,7 @@ def build_payload(summary: Summary, *, workspace: str, top: int, filters: dict) 
             "generated": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
             "filters": {k: v for k, v in filters.items() if v},
             "top": top,
+            "view": view,
         },
         "kpis": {
             "total": summary.total,
@@ -47,8 +48,10 @@ def build_payload(summary: Summary, *, workspace: str, top: int, filters: dict) 
     }
 
 
-def write_dashboard(summary: Summary, path: Path, *, workspace: str, top: int = 10, filters: dict | None = None) -> Path:
-    payload = build_payload(summary, workspace=workspace, top=top, filters=filters or {})
+def write_dashboard(
+    summary: Summary, path: Path, *, workspace: str, top: int = 10, filters: dict | None = None, view: str = "all"
+) -> Path:
+    payload = build_payload(summary, workspace=workspace, top=top, filters=filters or {}, view=view)
     template = files("policy_insights").joinpath("templates/dashboard.html").read_text(encoding="utf-8")
     data = json.dumps(payload, separators=(",", ":")).replace("</", "<\\/")
     page = template.replace("__TITLE__", html.escape(f"Policy Insights · {workspace}")).replace("__PAYLOAD__", data)

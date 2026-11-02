@@ -10,6 +10,7 @@ It answers:
 - **Which policies are noise?** Ranked by unmatched evaluations, with policies that never matched in the window called out.
 - **Where is it happening?** Breakdowns by repository, package format and the most-matched packages.
 - A policy × day heatmap (in the HTML dashboard) that switches between matched, unmatched and all.
+- A **Show: All / Matched / Unmatched** switch on the dashboard (and `--view matched` for both outputs). When the match rate is low, the matched-only view rescales the charts so matches are readable.
 
 ## Screenshots
 
@@ -60,6 +61,9 @@ policy-insights -w my-workspace --since 2026-09-01 --until 2026-09-30 \
 # Big pull with more parallelism, then re-render from the cache without the API
 policy-insights -w my-workspace -d 90 -j 32 --no-terminal
 policy-insights -w my-workspace -d 90 --offline --html report.html
+
+# Charts show matched results only (the dashboard can still switch views)
+policy-insights -w my-workspace --view matched --html report.html
 
 # Try it without API access
 policy-insights --demo --html demo.html --open
