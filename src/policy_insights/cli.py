@@ -6,6 +6,7 @@ import webbrowser
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from time import perf_counter
+from enum import Enum
 from typing import Annotated, Optional
 
 import typer
@@ -23,6 +24,12 @@ from .terminal import render
 app = typer.Typer(add_completion=False, rich_markup_mode="rich")
 console = Console()
 err = Console(stderr=True)
+
+
+class View(str, Enum):
+    all = "all"
+    matched = "matched"
+    unmatched = "unmatched"
 
 
 def _parse_day(value: str | None) -> date | None:
@@ -48,6 +55,7 @@ def main(
     open_html: Annotated[bool, typer.Option("--open", help="Open the HTML dashboard in a browser once written.")] = False,
     no_terminal: Annotated[bool, typer.Option("--no-terminal", help="Skip the terminal report (useful with --html).")] = False,
     top: Annotated[int, typer.Option(min=1, help="How many rows in the top-N tables and charts.")] = 10,
+    view: Annotated[View, typer.Option("--view", help="Which outcomes the charts show. 'matched' helps when the match rate is low; the dashboard can switch views too.")] = View.all,
     api_key: Annotated[Optional[str], typer.Option("--api-key", "-k", envvar=None, help="API key. Defaults to $CLOUDSMITH_API_KEY, then the Cloudsmith CLI's credentials.")] = None,
     profile: Annotated[Optional[str], typer.Option("--profile", "-P", help="Cloudsmith CLI profile to take credentials from.")] = None,
     credentials_file: Annotated[Optional[Path], typer.Option(help="Path to a Cloudsmith CLI credentials.ini.")] = None,
@@ -108,10 +116,10 @@ def main(
     store.close()
 
     if not no_terminal:
-        render(summary, console, workspace=workspace, top=top, source=source)
+        render(summary, console, workspace=workspace, top=top, source=source, view=view.value)
 
     if html:
-        path = write_dashboard(summary, html, workspace=workspace, top=top, filters=filters)
+        path = write_dashboard(summary, html, workspace=workspace, top=top, filters=filters, view=view.value)
         err.print(f"[green]Dashboard written to[/] {path.resolve()}")
         if open_html:
             webbrowser.open(path.resolve().as_uri())
