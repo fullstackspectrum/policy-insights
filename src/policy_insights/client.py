@@ -332,7 +332,7 @@ def fetch_days(
     headers = {
         **credential.headers,
         "Accept": "application/json",
-        "User-Agent": f"cs-decisions/{__version__}",
+        "User-Agent": f"policy-insights/{__version__}",
     }
     url = f"{API_BASE}/workspaces/{workspace}/policies/decision-logs-v1/"
     limits = httpx.Limits(max_connections=workers, max_keepalive_connections=workers)

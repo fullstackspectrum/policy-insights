@@ -61,7 +61,7 @@ def main(
     """Visualise Cloudsmith policy decision logs: volume per day, matched vs unmatched,
     the most active policies and the noisiest ones.
 
-    Finished days are cached on disk (~/.cache/cs-decisions), so re-runs only fetch
+    Finished days are cached on disk (~/.cache/policy-insights), so re-runs only fetch
     days not seen before plus today."""
     end_day = _parse_day(until) or datetime.now(timezone.utc).date()
     start_day = _parse_day(since) or end_day - timedelta(days=days - 1)

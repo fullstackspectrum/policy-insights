@@ -157,7 +157,7 @@ def render(summary: Summary, console: Console, *, workspace: str, top: int = 10,
         sub += f"  ·  data: {source}"
     console.print(
         Panel(
-            Text(f"Policy decision logs — {workspace}", "bold") + Text(f"\n{sub}", MUTED),
+            Text(f"Policy Insights — {workspace}", "bold") + Text(f"\n{sub}", MUTED),
             box=box.HEAVY,
             width=width,
         )

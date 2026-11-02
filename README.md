@@ -1,4 +1,4 @@
-# cs-decisions
+# Policy Insights
 
 Visualise [Cloudsmith policy decision logs](https://docs.cloudsmith.com/api/workspaces/policies/decision/logs/v1/list)
 in the terminal (Rich) or as an HTML dashboard.
@@ -30,7 +30,7 @@ These screenshots use generated demo data (`--demo`).
 
 ```sh
 uv sync                 # or: pip install -e .
-uv run cs-decisions --help
+uv run policy-insights --help
 ```
 
 ## Authentication
@@ -48,21 +48,21 @@ The workspace comes from `--workspace / -w`, `CLOUDSMITH_WORKSPACE`, or `workspa
 
 ```sh
 # Terminal report for the last 30 days
-cs-decisions -w my-workspace
+policy-insights -w my-workspace
 
 # Last 90 days: terminal report plus an HTML dashboard opened in the browser
-cs-decisions -w my-workspace -d 90 --html report.html --open
+policy-insights -w my-workspace -d 90 --html report.html --open
 
 # An explicit window, filtered to npm and python in one repository
-cs-decisions -w my-workspace --since 2026-09-01 --until 2026-09-30 \
+policy-insights -w my-workspace --since 2026-09-01 --until 2026-09-30 \
   --repo <repo-slug-perm> --format npm --format python
 
 # Big pull with more parallelism, then re-render from the cache without the API
-cs-decisions -w my-workspace -d 90 -j 32 --no-terminal
-cs-decisions -w my-workspace -d 90 --offline --html report.html
+policy-insights -w my-workspace -d 90 -j 32 --no-terminal
+policy-insights -w my-workspace -d 90 --offline --html report.html
 
 # Try it without API access
-cs-decisions --demo --html demo.html --open
+policy-insights --demo --html demo.html --open
 ```
 
 Dates are UTC days.
@@ -70,8 +70,8 @@ Dates are UTC days.
 ## Caching
 
 Logs for a finished UTC day never change, so each day's aggregates are saved to
-`~/.cache/cs-decisions/<workspace>-<filters>.sqlite` (or under `$XDG_CACHE_HOME`) as soon as that day finishes fetching.
-Later runs fetch only days that aren't cached yet, plus today. Only aggregates are stored, not raw logs. A 2M-log test window used a 13MB cache.
+`~/.cache/policy-insights/<workspace>-<filters>.sqlite` (or under `$XDG_CACHE_HOME`) as soon as that day finishes fetching.
+Later runs fetch only days that aren't cached yet, plus today. A cache from the tool's former name (`~/.cache/cs-decisions`) is moved across automatically. Only aggregates are stored, not raw logs. A 2M-log test window used a 13MB cache.
 
 - `--refresh` re-fetches every day in the window.
 - `--offline` renders from the cache only.

@@ -5,4 +5,4 @@ dist/
 *.egg-info/
 decision-logs*.json
 *.html
-!src/cs_decisions/templates/*.html
+!src/policy_insights/templates/*.html
