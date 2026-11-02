@@ -70,7 +70,9 @@ def main(
     the most active policies and the noisiest ones.
 
     Finished days are cached on disk (~/.cache/policy-insights), so re-runs only fetch
-    days not seen before plus today."""
+    days not seen before plus today.
+
+    Unofficial: a personal project, not a Cloudsmith product or supported by Cloudsmith."""
     end_day = _parse_day(until) or datetime.now(timezone.utc).date()
     start_day = _parse_day(since) or end_day - timedelta(days=days - 1)
     if start_day > end_day:

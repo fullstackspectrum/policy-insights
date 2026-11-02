@@ -3,6 +3,11 @@
 Visualise [Cloudsmith policy decision logs](https://docs.cloudsmith.com/api/workspaces/policies/decision/logs/v1/list)
 in the terminal (Rich) or as an HTML dashboard.
 
+> [!NOTE]
+> **This is not an official Cloudsmith tool.** It's a personal project, built in a personal capacity
+> and published on a personal GitHub account. Cloudsmith doesn't support or endorse it. The author
+> works at Cloudsmith, but this project isn't affiliated with that role. It's provided as is, with no warranty.
+
 It answers:
 
 - **How much is policy evaluation doing over time?** Decision logs per day, split matched / unmatched, plus daily match rate.
@@ -94,3 +99,12 @@ Each set of filters (`--policy`, `--repo`, `--format`, `--package`) gets its own
 - `CLOUDSMITH_API_HOST` points the client at another API host (useful for testing).
 
 The HTML dashboard is a single file. It loads Chart.js from cdnjs, so it needs network access when opened.
+
+## Disclaimer
+
+Policy Insights is an independent, personal project. It is not a Cloudsmith product, and Cloudsmith
+neither supports nor endorses it. It uses Cloudsmith's public API, and its colours follow Cloudsmith's
+palette. The Cloudsmith name belongs to Cloudsmith. Please don't raise issues with this tool through
+Cloudsmith support. Open them on this repository instead.
+
+Released under the [MIT License](LICENSE).
