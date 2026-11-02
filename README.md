@@ -1,5 +1,13 @@
 # Policy Insights
 
+<p align="center">
+  <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white"></a>
+  <a href="https://github.com/astral-sh/uv"><img alt="Managed with uv" src="https://img.shields.io/badge/managed%20with-uv-DE5FE9?style=for-the-badge&logo=uv&logoColor=white"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/github/license/fullstackspectrum/policy-insights?style=for-the-badge&color=2EA44F"></a>
+  <a href="https://github.com/fullstackspectrum/policy-insights/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/fullstackspectrum/policy-insights?style=for-the-badge&logo=github&color=24292F"></a>
+  <img alt="Unofficial: not a Cloudsmith product" src="https://img.shields.io/badge/cloudsmith-unofficial-6E7781?style=for-the-badge">
+</p>
+
 Visualise [Cloudsmith policy decision logs](https://docs.cloudsmith.com/api/workspaces/policies/decision/logs/v1/list)
 in the terminal (Rich) or as an HTML dashboard.
 
