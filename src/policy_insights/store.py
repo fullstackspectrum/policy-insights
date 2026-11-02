@@ -40,7 +40,11 @@ SETTLE = timedelta(hours=1)
 
 
 def cache_path(workspace: str, filters: dict) -> Path:
-    root = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "cs-decisions"
+    base = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache")
+    root = base / "policy-insights"
+    legacy = base / "cs-decisions"  # the tool's former name
+    if legacy.is_dir() and not root.exists():
+        legacy.rename(root)
     key = json.dumps({k: sorted(v) if isinstance(v, list) else v for k, v in filters.items() if v}, sort_keys=True)
     digest = hashlib.sha256(key.encode()).hexdigest()[:10]
     return root / f"{workspace}-{digest}.sqlite"

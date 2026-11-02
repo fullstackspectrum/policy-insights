@@ -49,8 +49,8 @@ def build_payload(summary: Summary, *, workspace: str, top: int, filters: dict) 
 
 def write_dashboard(summary: Summary, path: Path, *, workspace: str, top: int = 10, filters: dict | None = None) -> Path:
     payload = build_payload(summary, workspace=workspace, top=top, filters=filters or {})
-    template = files("cs_decisions").joinpath("templates/dashboard.html").read_text(encoding="utf-8")
+    template = files("policy_insights").joinpath("templates/dashboard.html").read_text(encoding="utf-8")
     data = json.dumps(payload, separators=(",", ":")).replace("</", "<\\/")
-    page = template.replace("__TITLE__", html.escape(f"Decision logs · {workspace}")).replace("__PAYLOAD__", data)
+    page = template.replace("__TITLE__", html.escape(f"Policy Insights · {workspace}")).replace("__PAYLOAD__", data)
     path.write_text(page, encoding="utf-8")
     return path
