@@ -13,8 +13,10 @@ from rich.text import Text
 
 from .analysis import Bucket, Summary, top_matching, top_noisy
 
-MATCHED = "#498af6"  # Cloudsmith blue (dark-surface step)
-UNMATCHED = "#de7056"  # Cloudsmith salmon, darkened for contrast
+# Full-Stack-Spectrum palette: matched in the spectrum's blue, unmatched in its orange.
+MATCHED = "#4f8cff"
+UNMATCHED = "#ff8a3d"
+SPECTRUM = ("#4f8cff", "#8fb4ff", "#f5c84c", "#ff8a3d", "#ff4d5e")
 MUTED = "grey50"
 SPARKS = "▁▂▃▄▅▆▇█"
 LOWER = " ▁▂▃▄▅▆▇█"
@@ -173,7 +175,9 @@ def render(summary: Summary, console: Console, *, workspace: str, top: int = 10,
         sub += f"  ·  charts: {view} only"
     console.print(
         Panel(
-            Text(f"Policy Insights — {workspace}", "bold") + Text(f"\n{sub}", MUTED),
+            Text.assemble(*((("▬▬ " if i < 4 else "▬▬") , c) for i, c in enumerate(SPECTRUM)))
+            + Text(f"\nPolicy Insights — {workspace}", "bold")
+            + Text(f"\n{sub}", MUTED),
             box=box.HEAVY,
             width=width,
         )
