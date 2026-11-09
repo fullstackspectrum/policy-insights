@@ -6,3 +6,4 @@ dist/
 decision-logs*.json
 *.html
 !src/policy_insights/templates/*.html
+!docs/brand/src/*.html

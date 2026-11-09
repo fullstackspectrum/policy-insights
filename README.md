@@ -1,12 +1,14 @@
-# Policy Insights
+<p align="center">
+  <img alt="Policy Insights: which policies do the work, and which are noise." src="docs/readme-banner.png" width="100%">
+</p>
 
 <p align="center">
-  <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white"></a>
-  <a href="https://github.com/astral-sh/uv"><img alt="Managed with uv" src="https://img.shields.io/badge/managed%20with-uv-DE5FE9?style=for-the-badge&logo=uv&logoColor=white"></a>
-  <a href="https://github.com/fullstackspectrum/policy-insights/releases"><img alt="Release downloads" src="https://img.shields.io/github/downloads/fullstackspectrum/policy-insights/total?style=for-the-badge&logo=github&color=0969DA"></a>
-  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/github/license/fullstackspectrum/policy-insights?style=for-the-badge&color=2EA44F"></a>
-  <a href="https://github.com/fullstackspectrum/policy-insights/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/fullstackspectrum/policy-insights?style=for-the-badge&logo=github&color=24292F"></a>
-  <img alt="Unofficial: not a Cloudsmith product" src="https://img.shields.io/badge/cloudsmith-unofficial-6E7781?style=for-the-badge">
+  <a href="pyproject.toml"><img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-4f8cff?style=for-the-badge&logo=python&logoColor=eef1f6&labelColor=10151d"></a>
+  <a href="https://github.com/astral-sh/uv"><img alt="Managed with uv" src="https://img.shields.io/badge/managed%20with-uv-8fb4ff?style=for-the-badge&logo=uv&logoColor=eef1f6&labelColor=10151d"></a>
+  <a href="https://github.com/fullstackspectrum/policy-insights/releases"><img alt="Release downloads" src="https://img.shields.io/github/downloads/fullstackspectrum/policy-insights/total?style=for-the-badge&logo=github&logoColor=eef1f6&color=f5c84c&labelColor=10151d"></a>
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/github/license/fullstackspectrum/policy-insights?style=for-the-badge&color=ff8a3d&labelColor=10151d"></a>
+  <a href="https://github.com/fullstackspectrum/policy-insights/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/fullstackspectrum/policy-insights?style=for-the-badge&logo=github&logoColor=eef1f6&color=ff4d5e&labelColor=10151d"></a>
+  <img alt="Community project, not affiliated with Cloudsmith" src="https://img.shields.io/badge/cloudsmith-not%20affiliated-2f3a4b?style=for-the-badge&labelColor=10151d">
 </p>
 
 Visualise [Cloudsmith policy decision logs](https://docs.cloudsmith.com/api/workspaces/policies/decision/logs/v1/list)
@@ -112,8 +114,9 @@ The HTML dashboard is a single file. It loads Chart.js from cdnjs, so it needs n
 ## Disclaimer
 
 Policy Insights is an independent, personal project. It is not a Cloudsmith product, and Cloudsmith
-neither supports nor endorses it. It uses Cloudsmith's public API, and its colours follow Cloudsmith's
-palette. The Cloudsmith name belongs to Cloudsmith. Please don't raise issues with this tool through
+neither supports nor endorses it. It uses Cloudsmith's public API. The Cloudsmith name belongs to
+Cloudsmith. Please don't raise issues with this tool through
 Cloudsmith support. Open them on this repository instead.
 
-Released under the [MIT License](LICENSE).
+Policy Insights is part of [Full-Stack-Spectrum](https://fullstackspectrum.com), a set of small, open-source
+security and developer tools. Released under the [MIT License](LICENSE).
