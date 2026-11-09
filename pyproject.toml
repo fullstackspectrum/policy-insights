@@ -1,6 +1,6 @@
 [project]
 name = "policy-insights"
-version = "1.0.0"
+version = "1.1.0"
 description = "Visualise Cloudsmith policy decision logs in the terminal or as an HTML dashboard (unofficial; not a Cloudsmith product)"
 readme = "README.md"
 license = "MIT"
